@@ -31,3 +31,13 @@ function decodeHTML(str) {
         .replace(/&gt;/g, '>')
         .replace(/&amp;/g, '&');
 }
+
+/**
+ * get type description of any js type
+ * @param obj
+ * @returns {String} "Null","Undefined","Boolean","Number","String","Array","Object",
+ * "Function","Math","RegExp","Date","Error","Window","Location","Storage","HTMLElement","HTMLDivElement"...
+ */
+function type(obj) {
+    return Object.prototype.toString.call(obj).slice(8, -1);
+}
