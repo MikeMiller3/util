@@ -41,3 +41,28 @@ function decodeHTML(str) {
 function type(obj) {
     return Object.prototype.toString.call(obj).slice(8, -1);
 }
+
+/**
+ * jsonp
+ * @param {String} url which suffix=js/css
+ * @param onload
+ */
+function(url, onload) {
+    var node = {}
+    if (/.+\.css(\?.+)?$/.test(url)) {
+        node = document.createElement('link');
+        node.setAttribute('rel', 'stylesheet');
+        node.setAttribute('href', url);
+    }else if (/.+\.js(\?.+)?$/.test(url)) {
+        node = document.createElement('script')
+        node.setAttribute('src', url)
+        node.setAttribute('type','text/javascript')
+    } else {
+        console.log('jsonp url error')
+        return
+    }
+    if(onload && typeof onload == 'function') {
+        node.onload = onload
+    }
+    document.getElementsByTagName('head')[0].appendChild(node)
+}
