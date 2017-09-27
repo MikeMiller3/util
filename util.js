@@ -47,22 +47,51 @@ function type(obj) {
  * @param {String} url which suffix=js/css
  * @param onload
  */
-function(url, onload) {
+function jsonp(url, onload) {
     var node = {}
     if (/.+\.css(\?.+)?$/.test(url)) {
         node = document.createElement('link');
         node.setAttribute('rel', 'stylesheet');
         node.setAttribute('href', url);
-    }else if (/.+\.js(\?.+)?$/.test(url)) {
+    } else if (/.+\.js(\?.+)?$/.test(url)) {
         node = document.createElement('script')
         node.setAttribute('src', url)
-        node.setAttribute('type','text/javascript')
+        node.setAttribute('type', 'text/javascript')
     } else {
-        console.log('jsonp url error')
         return
     }
-    if(onload && typeof onload == 'function') {
+    if (onload && typeof onload == 'function') {
         node.onload = onload
     }
     document.getElementsByTagName('head')[0].appendChild(node)
+}
+
+/**
+ * ajax
+ * @param method {String} "GET, POST"
+ * @param contentType {String} application/json, application/x-www-form-urlencoded
+ * @param url {String}
+ * @param param {String}
+ * @param success {Function}
+ * @param fail {Function}
+ */
+function ajax(method, contentType, url, param, success, fail) {
+    var xhr;
+    if (window.XMLHttpRequest) {
+        xhr = new XMLHttpRequest();
+    } else {
+        // for IE6, IE5
+        xhr = ActiveXObject("Microsoft.XMLHTTP");
+    }
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            success && success(xhr.responseText);
+        } else {
+            fail && fail(xhr.responseText)
+        }
+    }
+    xhr.withCredentials = true;
+    xhr.open(method, url, true);
+    xhr.setRequestHeader("Content-type", contentType);
+    xhr.send(param);
 }
