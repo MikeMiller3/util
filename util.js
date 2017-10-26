@@ -95,3 +95,82 @@ function ajax(method, contentType, url, param, success, fail) {
     xhr.setRequestHeader("Content-type", contentType);
     xhr.send(param);
 }
+
+/**
+ * EventUtil
+ */
+var EventUtil = {}
+
+/**
+ * add event binding to an dom element
+ * @param el
+ * @param type
+ * @param handler
+ */
+EventUtil.bind = function (el, type, handler) {
+    if (el.addEventListener) { //use dom2
+        el.addEventListener(type, handler, false);
+    } else if (el.attachEvent) { //use IE
+        el.attachEvent('on' + type, handler)
+    } else { //use dom0
+        el['on' + type] = handler
+    }
+}
+
+/**
+ * remove event binding to an dom element
+ * @param el
+ * @param type
+ * @param handler
+ */
+EventUtil.unbind = function (el, type, handler) {
+    if (el.removeEventListener) { //use dom2, >=ie9
+        el.removeEventListener(type, handler, false);
+    } else if (el.detachEvent) { //use IE, <=ie8
+        el.detachEvent('on' + type, handler)
+    } else { //use dom0
+        el['on' + type] = null
+    }
+}
+
+/**
+ * get event
+ * @param event
+ * @returns {*|Event}
+ */
+EventUtil.getEvent = function (event) {
+    return event || window.event;//ie use window.event
+}
+
+/**
+ * get event target
+ * @param event
+ * @returns {string|EventTarget|Node|*|Object}
+ */
+EventUtil.getTarget = function (event) {
+    return event.target || event.srcElement; //ie attr srcElement
+}
+
+/**
+ * prevent browser default event
+ * @param event
+ */
+EventUtil.preventDefault = function (event) {
+    if (event.preventDefault) {
+        event.preventDefault();
+    } else {
+        event.returnValue = false; //ie, default true
+    }
+}
+
+/**
+ * stop event propagation(capture & bubble)
+ * @param event
+ */
+EventUtil.stopPropagation = function (event) {
+    if (event.stopPropagation) { // >=ie9 & others
+        event.stopPropagation()
+    } else {
+        event.cancelBubble = false; //<=ie8 ,default true
+    }
+}
